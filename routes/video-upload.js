@@ -55,7 +55,7 @@ router.get('/', async function(req, res, next) {
           wochitObj.type = 'VIDEO';
           wochitObj.contentType = 'Editorial';
           wochitObj.id = videoId.value;
-          wochitObj.downloadUrl = 'http://89.245.128.150:3000/video/' + videoName;
+          wochitObj.downloadUrl = 'http://89.245.128.150:3000/videos/' + videoName;
           wochitObj.title = titleObj.value;
           wochitObj.caption = descriptionObj.value;
 
@@ -117,7 +117,7 @@ router.get('/', async function(req, res, next) {
           const videoName = file.replace('xml', 'mp4');
           wochitObj.type = 'VIDEO';
           wochitObj.contentType = 'Editorial';
-          wochitObj.downloadUrl = 'http://89.245.128.150:3000/video/' + videoName;
+          wochitObj.downloadUrl = 'http://89.245.128.150:3000/videos/' + videoName;
           wochitObj.title = titleObj.$t;
           wochitObj.id = videoId.$t;
 
