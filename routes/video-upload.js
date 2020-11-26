@@ -24,6 +24,11 @@ router.get('/', async function(req, res, next) {
     for (const [index, file] of files.entries()) {
       console.log(`---- Processing file ${index + 1} of ${files.length}`);
       const xmlData = await fs.readFile(xmlFilesPath + '/' + file);
+
+      var wochitJsonUpdated = convert.xml2json(xmlData, {compact: true, spaces: 4});
+      wochitJsonUpdated = JSON.parse(wochitJsonUpdated);
+
+
       const videoNameTemp = file.replace('xml', 'mp4');
       const isVideoExists = fileMethod.existsSync(directoryPath + '/' + videoNameTemp);
       if (isVideoExists) {
@@ -84,14 +89,22 @@ router.get('/', async function(req, res, next) {
           const dateObj = wochitJson.nsml.fields.date.find((_m) => {
             return _m.id.toLowerCase() === 'create-date';
           });
+
           // find description
-          const descriptionArr = wochitJson.nsml.body.p;
+          const descriptionArr = wochitJsonUpdated.nsml.body.p;
           let description = '';
-          descriptionArr.forEach(des => {
-            if (typeof des === 'string') {
-              description = description + ' ' + des;
+          if (isArray(descriptionArr)) {
+            descriptionArr.forEach(des => {
+              if (des._text) {
+                description = description + '. ' + des._text;
+              }
+            });
+          } else {
+            if (descriptionArr._text) {
+              description = description + '. ' + descriptionArr._text;
             }
-          });
+          }
+          
           const videoName = file.replace('xml', 'mp4');
           wochitObj.type = 'VIDEO';
           wochitObj.contentType = 'Editorial';
