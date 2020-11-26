@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var parser = require('xml2json');
+var convert = require('xml-js');
 const http = require('https');
 var moment = require('moment');
 
@@ -96,12 +97,20 @@ router.get('/', async function(req, res, next) {
           if (isArray(descriptionArr)) {
             descriptionArr.forEach(des => {
               if (des._text) {
-                description = description + '. ' + des._text;
+                if (description.length === 0) {
+                  description = des._text;
+                } else {
+                  description = description + '. ' + des._text;
+                }
               }
             });
           } else {
             if (descriptionArr._text) {
-              description = description + '. ' + descriptionArr._text;
+              if (description.length === 0) {
+                description = descriptionArr._text;
+              } else {
+                description = description + '. ' + descriptionArr._text;
+              }
             }
           }
           
@@ -222,5 +231,9 @@ function postWochitIngestApi(videoData, token){
     return error;
   });
 }
+
+function isArray (a) {
+  return (!!a) && (a.constructor === Array);
+};
 
 module.exports = router;
